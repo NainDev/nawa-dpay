@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Nawa – Layanan Sosial Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue-deep:#0c1f5e;--blue-main:#1a56db;--blue-mid:#2563eb;
+  --blue-lt:#3b82f6;--blue-pale:#bfdbfe;--blue-bg:#f0f7ff;
+  --text-dark:#1e3a5f;--text-muted:#6b9fd4;--white:#fff;
+  --glass:rgba(255,255,255,0.86);--border:rgba(148,187,255,0.28);
+  --shadow:0 8px 32px rgba(26,86,219,0.13);
+  --green:#059669;--red:#dc2626;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#e8f0fe,#dbeafe 40%,#f0f7ff 70%,#fff);min-height:100vh;color:var(--text-dark);overflow-x:hidden}
+body.modal-open{overflow:hidden}
+
+/* BLOBS */
+.blob{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.b1{width:700px;height:700px;background:#93c5fd;opacity:.1;top:-220px;left:-120px}
+.b2{width:450px;height:450px;background:#1d4ed8;opacity:.09;bottom:-80px;right:-100px}
+.b3{width:320px;height:320px;background:#60a5fa;opacity:.08;top:38%;left:28%}
+.b4{width:200px;height:200px;background:#a5b4fc;opacity:.1;top:18%;right:18%}
+
+/* ══ NAVBAR ══ */
+#navbar{position:sticky;top:0;z-index:100;background:rgba(240,247,255,0.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;padding:0 clamp(16px,4vw,48px)}
+.nav-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-brand-icon{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#0c1f5e,#1a56db);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(26,86,219,.28);flex-shrink:0}
+.nav-brand-name{font-family:'Poppins',sans-serif;font-weight:800;font-size:20px;color:var(--blue-deep);letter-spacing:-.3px}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{padding:8px 14px;border-radius:10px;font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:all .18s;cursor:pointer;background:transparent;border:none;font-family:'DM Sans',sans-serif}
+.nav-link:hover{background:rgba(26,86,219,.07);color:var(--blue-main)}
+.nav-link.active{color:var(--blue-main);font-weight:600;background:rgba(26,86,219,.08)}
+.nav-cta{padding:9px 20px;border-radius:11px;background:linear-gradient(135deg,#0c1f5e,#1a56db);color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(26,86,219,.28);transition:all .2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,86,219,.36)}
+.hamburger-nav{display:none;width:36px;height:36px;align-items:center;justify-content:center;border-radius:10px;border:none;cursor:pointer;background:rgba(26,86,219,.08);color:var(--blue-main)}
+
+/* ══ HERO ══ */
+.hero{position:relative;overflow:hidden;padding:70px clamp(16px,4vw,48px) 60px;text-align:center}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(26,86,219,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,86,219,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(26,86,219,.09);border:1px solid rgba(26,86,219,.18);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:700;color:var(--blue-main);letter-spacing:.05em;text-transform:uppercase;margin-bottom:22px}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--blue-main);animation:pulse-dot 1.6s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(0.7)}}
+.hero-title{font-family:'Poppins',sans-serif;font-weight:900;font-size:clamp(34px,6vw,60px);color:var(--blue-deep);line-height:1.1;margin-bottom:16px;letter-spacing:-1px}
+.hero-title span{background:linear-gradient(135deg,#1a56db,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(14px,2vw,17px);color:var(--text-muted);line-height:1.7;margin-bottom:36px;font-weight:400}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:32px;margin-top:32px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-val{font-family:'Poppins',sans-serif;font-weight:800;font-size:22px;color:var(--blue-deep)}
+.hero-stat-lbl{font-size:11.5px;color:var(--text-muted);font-weight:500;margin-top:1px}
+.hero-divider{width:1px;height:36px;background:var(--border)}
+
+/* ══ SEARCH ══ */
+.search-wrap{max-width:560px;margin:0 auto;position:relative}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--glass);border:2px solid var(--blue-pale);border-radius:16px;padding:10px 12px 10px 16px;box-shadow:0 8px 32px rgba(26,86,219,.12);transition:all .2s;backdrop-filter:blur(8px)}
+.search-box:focus-within{border-color:var(--blue-main);box-shadow:0 8px 32px rgba(26,86,219,.22)}
+.search-ico{color:var(--text-muted);flex-shrink:0;width:18px;height:18px}
+#search-input{flex:1;border:none;background:transparent;font-size:14px;color:var(--text-dark);outline:none;font-family:'DM Sans',sans-serif}
+#search-input::placeholder{color:var(--text-muted)}
+.search-btn{padding:10px 20px;border-radius:11px;background:linear-gradient(135deg,#0c1f5e,#1a56db);color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s}
+.search-btn:hover{transform:scale(1.03);box-shadow:0 4px 14px rgba(26,86,219,.3)}
+
+/* ══ MAIN CONTENT ══ */
+.main{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;position:relative;z-index:1}
+
+/* ══ SECTION TITLE ══ */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.sec-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--text-dark);display:flex;align-items:center;gap:10px}
+.sec-badge{font-size:11px;font-weight:700;color:var(--text-muted);background:rgba(148,187,255,.14);border:1px solid var(--border);border-radius:8px;padding:4px 10px;letter-spacing:.04em}
+
+/* ══ PLATFORM GRID ══ */
+.section-block{background:var(--glass);border:1px solid var(--border);border-radius:22px;padding:26px;box-shadow:var(--shadow);margin-bottom:22px;backdrop-filter:blur(4px)}
+.platforms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.platform-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 12px;border-radius:16px;border:2px solid transparent;background:rgba(255,255,255,.7);cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
+.platform-card::before{content:'';position:absolute;inset:0;border-radius:14px;opacity:0;transition:opacity .22s}
+.platform-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,86,219,.14)}
+.platform-card:hover::before{opacity:1}
+.platform-card.active{border-color:var(--blue-main) !important;box-shadow:0 6px 20px rgba(26,86,219,.2) !important}
+.platform-card.active .plt-name{color:var(--blue-main) !important;font-weight:700}
+.plt-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1}
+.plt-name{font-size:13px;font-weight:600;color:var(--text-dark);text-align:center;position:relative;z-index:1;line-height:1.3}
+.plt-count{font-size:11px;color:var(--text-muted);font-weight:500;position:relative;z-index:1}
+
+/* ══ SERVICES SECTION ══ */
+#section-services{display:none;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.platform-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:18px 20px;border-radius:16px;background:linear-gradient(120deg,var(--blue-deep),var(--blue-main) 60%,var(--blue-lt));color:#fff;position:relative;overflow:hidden}
+.platform-header::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px}
+.ph-icon{width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1}
+.ph-info{flex:1;position:relative;z-index:1}
+.ph-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:#fff;margin-bottom:2px}
+.ph-desc{font-size:12px;color:rgba(186,216,255,.75)}
+.ph-back{position:relative;z-index:1;display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:11px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px;font-weight:600;cursor:pointer;border-btn:none;font-family:'DM Sans',sans-serif;transition:all .18s;white-space:nowrap;text-decoration:none}
+.ph-back:hover{background:rgba(255,255,255,.22)}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.svc-card{background:var(--glass);border:1.5px solid var(--border);border-radius:18px;padding:20px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;backdrop-filter:blur(4px)}
+.svc-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,86,219,.04),transparent 60%);opacity:0;transition:opacity .22s;border-radius:16px}
+.svc-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,86,219,.15);border-color:var(--blue-pale)}
+.svc-card:hover::after{opacity:1}
+.svc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.svc-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.svc-info{flex:1;min-width:0}
+.svc-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);margin-bottom:4px;line-height:1.3}
+.svc-platform{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase}
+.svc-desc{font-size:12.5px;color:var(--text-muted);line-height:1.6;margin-bottom:14px}
+.svc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.svc-tag{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:7px;font-size:11px;font-weight:600;background:rgba(148,187,255,.12);color:var(--text-muted);border:1px solid var(--border)}
+.svc-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.svc-price{flex:1}
+.svc-from{font-size:10.5px;color:var(--text-muted);font-weight:500;margin-bottom:1px}
+.svc-price-val{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:var(--blue-main)}
+.svc-unit{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px}
+.svc-btn{padding:9px 18px;border-radius:11px;background:linear-gradient(135deg,#0c1f5e,#1a56db);color:#fff;font-size:12.5px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;box-shadow:0 4px 14px rgba(26,86,219,.25)}
+.svc-btn:hover{transform:scale(1.04);box-shadow:0 6px 18px rgba(26,86,219,.34)}
+.svc-popular{position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.05em}
+
+/* ══ NO RESULTS ══ */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text-muted)}
+.empty-state svg{margin-bottom:12px;opacity:.4}
+.empty-title{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:6px}
+.empty-sub{font-size:13px}
+
+/* ══ MODAL BACKDROP ══ */
+#modal-backdrop{position:fixed;inset:0;background:rgba(12,31,94,.45);backdrop-filter:blur(4px);z-index:400;display:none;align-items:flex-end;justify-content:center;padding:0}
+#modal-backdrop.show{display:flex;animation:bdIn .2s ease}
+@keyframes bdIn{from{opacity:0}to{opacity:1}}
+@media(min-width:600px){#modal-backdrop{align-items:center;padding:20px}}
+
+/* ══ ORDER MODAL ══ */
+.modal{width:100%;max-width:520px;max-height:95vh;overflow-y:auto;background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 48px rgba(12,31,94,.28);animation:modalUp .32s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column}
+@media(min-width:600px){.modal{border-radius:24px;animation:modalPop .3s cubic-bezier(.34,1.56,.64,1)}}
+@keyframes modalUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes modalPop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal::-webkit-scrollbar{width:4px}.modal::-webkit-scrollbar-thumb{background:rgba(148,187,255,.35);border-radius:10px}
+.modal-header{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:var(--text-dark)}
+.modal-close{width:34px;height:34px;border-radius:50%;border:none;background:rgba(148,187,255,.15);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.modal-close:hover{background:rgba(220,38,38,.12);color:var(--red)}
+.modal-body{padding:18px 22px 24px;flex:1;overflow-y:auto}
+
+/* SERVICE INFO IN MODAL */
+.modal-svc-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:linear-gradient(120deg,rgba(26,86,219,.06),rgba(59,130,246,.04));border:1px solid var(--border);margin-bottom:18px}
+.modal-svc-ico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-svc-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);margin-bottom:3px}
+.modal-svc-meta{font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.modal-dot{width:4px;height:4px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
+
+/* QUANTITY */
+.qty-section{margin-bottom:18px}
+.field-label{font-size:11.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.qty-presets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.qty-preset{padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);background:rgba(255,255,255,.8);color:var(--text-muted);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .16s}
+.qty-preset.active,.qty-preset:hover{border-color:var(--blue-main);color:var(--blue-main);background:rgba(26,86,219,.06)}
+.qty-input-wrap{display:flex;align-items:center;gap:10px}
+.qty-input{flex:1;padding:10px 13px;border-radius:10px;border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text-dark);outline:none;transition:border-color .2s;background:rgba(255,255,255,.8)}
+.qty-input:focus{border-color:var(--blue-main)}
+.qty-unit{font-size:13px;color:var(--text-muted);font-weight:500;white-space:nowrap}
+
+/* PRICE SUMMARY */
+.price-summary{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;background:rgba(26,86,219,.05);border:1px solid rgba(26,86,219,.12);margin-bottom:18px}
+.ps-label{font-size:13px;color:var(--text-muted);font-weight:500}
+.ps-total{font-family:'Poppins',sans-serif;font-weight:800;font-size:20px;color:var(--blue-main)}
+
+/* PAYMENT METHODS */
+.pay-section{margin-bottom:20px}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.pay-card{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:13px;border:2px solid var(--border);background:rgba(255,255,255,.8);cursor:pointer;transition:all .18s;position:relative}
+.pay-card:hover{border-color:var(--blue-pale);background:rgba(255,255,255,.95)}
+.pay-card.active{border-color:var(--blue-main);background:rgba(26,86,219,.05)}
+.pay-card.active .pay-name{color:var(--blue-main);font-weight:700}
+.pay-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .18s;position:relative}
+.pay-card.active .pay-radio{border-color:var(--blue-main)}
+.pay-card.active .pay-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--blue-main)}
+.pay-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pay-info{flex:1;min-width:0}
+.pay-name{font-size:13px;font-weight:600;color:var(--text-dark);white-space:nowrap}
+.pay-type{font-size:10.5px;color:var(--text-muted);font-weight:500}
+
+/* QRIS DISPLAY */
+#qris-section{display:none;margin-bottom:18px;animation:fadeUp .28s ease}
+.qris-card{border-radius:16px;border:2px solid var(--blue-pale);background:rgba(240,247,255,.6);padding:20px;text-align:center}
+.qris-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px}
+.qris-box{width:180px;height:180px;margin:0 auto 14px;border-radius:14px;background:#fff;border:3px solid var(--blue-deep);padding:10px;position:relative;display:flex;align-items:center;justify-content:center}
+.qris-box svg{width:100%;height:100%}
+.qris-label{font-size:12.5px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
+.qris-note{font-size:11.5px;color:var(--text-muted);line-height:1.6}
+.qris-amount{font-family:'Poppins',sans-serif;font-weight:800;font-size:17px;color:var(--blue-main);margin-bottom:10px}
+
+/* EWALLET DISPLAY */
+#ewallet-section{display:none;margin-bottom:18px;animation:fadeUp .28s ease}
+.ewallet-card{border-radius:14px;border:1.5px solid var(--border);background:rgba(255,255,255,.7);padding:16px}
+.ew-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.ew-row:last-child{border-bottom:none}
+.ew-lbl{font-size:12px;color:var(--text-muted);font-weight:500}
+.ew-val{font-size:13.5px;font-weight:700;color:var(--text-dark)}
+.ew-copy{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--blue-main);cursor:pointer;padding:4px 8px;border-radius:7px;background:rgba(26,86,219,.07);border:none;font-family:'DM Sans',sans-serif;transition:all .16s}
+.ew-copy:hover{background:rgba(26,86,219,.12)}
+
+/* CONFIRM BUTTON */
+.btn-confirm{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#0c1f5e,#1a56db);color:#fff;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(26,86,219,.32);transition:all .22s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-confirm:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(26,86,219,.42)}
+.btn-confirm:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* SUCCESS STATE */
+#success-section{display:none;text-align:center;padding:20px 10px;animation:fadeUp .3s ease}
+.success-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 24px rgba(5,150,105,.3)}
+.success-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:var(--text-dark);margin-bottom:8px}
+.success-sub{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:20px}
+.success-order{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);border-radius:12px;padding:14px;margin-bottom:20px;text-align:left}
+.so-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid rgba(5,150,105,.1)}
+.so-row:last-child{border-bottom:none;font-weight:700}
+.so-lbl{color:var(--text-muted)}
+.so-val{color:var(--text-dark);font-weight:600}
+.btn-close-success{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .18s}
+.btn-close-success:hover{background:rgba(148,187,255,.1);color:var(--text-dark)}
+
+/* ══ TRUST SECTION ══ */
+.trust-section{padding:48px clamp(16px,4vw,48px);background:linear-gradient(135deg,var(--blue-deep),var(--blue-main) 60%,var(--blue-lt));position:relative;overflow:hidden;margin-top:20px}
+.trust-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.trust-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;text-align:center}
+.trust-item{padding:20px}
+.trust-item-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.trust-item-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px}
+.trust-item-desc{font-size:12.5px;color:rgba(186,216,255,.7);line-height:1.6}
+
+/* ══ FOOTER ══ */
+footer{padding:28px clamp(16px,4vw,48px);text-align:center;font-size:12.5px;color:var(--text-muted);border-top:1px solid var(--border);background:rgba(240,247,255,.7)}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;border-radius:13px;padding:13px 20px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{background:linear-gradient(135deg,#059669,#16a34a);color:#fff}
+#toast.info{background:linear-gradient(135deg,#1a56db,#2563eb);color:#fff}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger-nav{display:flex}
+  .platforms-grid{grid-template-columns:repeat(4,1fr)}
+  .services-grid{grid-template-columns:1fr}
+  .pay-grid{grid-template-columns:1fr}
+  .hero{padding:50px 16px 40px}
+}
+@media(max-width:480px){
+  .platforms-grid{grid-template-columns:repeat(3,1fr)}
+  .hero-stats{gap:18px}
+  .hero-divider{height:28px}
+}
+</style>
+</head>
+<body>
+<!-- Blobs -->
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+<div id="toast"></div>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <div class="nav-brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="nav-brand-name">Nawa</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link active" onclick="scrollToSection('layanan')">Layanan</a>
+      <a class="nav-link" onclick="scrollToSection('cara-order')">Cara Order</a>
+      <a class="nav-link" onclick="scrollToSection('keunggulan')">Keunggulan</a>
+    </div>
+    <button class="nav-cta" onclick="scrollToSection('layanan')">
+      Mulai Sekarang
+    </button>
+    <button class="hamburger-nav" onclick="scrollToSection('layanan')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Platform Terpercaya #1 Indonesia
+    </div>
+    <h1 class="hero-title">
+      Tingkatkan<br><span>Sosial Media</span><br>Kamu Sekarang
+    </h1>
+    <p class="hero-sub">
+      Layanan followers, likes, views, dan subscriber<br>
+      untuk semua platform — cepat, aman, dan terjamin.
+    </p>
+    <!-- Search -->
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search-input" type="text" placeholder="Cari layanan... contoh: TikTok followers" oninput="doSearch(this.value)"/>
+        <button class="search-btn" onclick="doSearch(document.getElementById('search-input').value)">Cari</button>
+      </div>
+    </div>
+    <!-- Stats -->
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">50K+</div><div class="hero-stat-lbl">Pelanggan Aktif</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="hero-stat-val">7</div><div class="hero-stat-lbl">Platform</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="hero-stat-val">100%</div><div class="hero-stat-lbl">Aman & Terjamin</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main" id="layanan">
+
+  <!-- PLATFORM GRID -->
+  <div class="section-block">
+    <div class="sec-head">
+      <div class="sec-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Pilih Platform
+      </div>
+      <div class="sec-badge">7 Platform Tersedia</div>
+    </div>
+    <div class="platforms-grid" id="platforms-grid"></div>
+  </div>
+
+  <!-- SERVICES SECTION -->
+  <div id="section-services">
+    <!-- Platform Header (dynamic) -->
+    <div class="platform-header" id="platform-header"></div>
+    <!-- Services Grid -->
+    <div class="services-grid" id="services-grid"></div>
+  </div>
+
+  <!-- SEARCH RESULTS (hidden by default) -->
+  <div id="section-search" style="display:none">
+    <div class="section-block">
+      <div class="sec-head">
+        <div class="sec-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Hasil Pencarian
+        </div>
+        <button class="sec-badge" style="cursor:pointer;border:none;font-family:inherit" onclick="clearSearch()">✕ Tutup</button>
+      </div>
+      <div class="services-grid" id="search-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ TRUST SECTION ══════════ -->
+<section class="trust-section" id="keunggulan">
+  <div class="trust-grid-bg"></div>
+  <div class="trust-inner">
+    <div class="trust-item">
+      <div class="trust-item-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="trust-item-title">100% Aman</div>
+      <div class="trust-item-desc">Tidak memerlukan password. Proses aman tanpa risiko akun suspend.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-item-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="trust-item-title">Proses Cepat</div>
+      <div class="trust-item-desc">Pesanan mulai diproses dalam hitungan menit setelah pembayaran.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-item-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="trust-item-title">Garansi Refill</div>
+      <div class="trust-item-desc">Jika terjadi penurunan, kami refill gratis tanpa syarat tambahan.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-item-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="trust-item-title">CS 24/7</div>
+      <div class="trust-item-desc">Tim dukungan siap membantu kapan saja melalui chat atau WhatsApp.</div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2025 Nawa · Layanan Sosial Media Terpercaya · Semua hak dilindungi</footer>
+
+<!-- ══════════ ORDER MODAL ══════════ -->
+<div id="modal-backdrop" onclick="handleBackdropClick(event)">
+  <div class="modal" id="modal-box">
+    <!-- STEP 1: ORDER -->
+    <div id="step-order">
+      <div class="modal-header">
+        <div class="modal-title">Detail Pesanan</div>
+        <button class="modal-close" onclick="closeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Service Info -->
+        <div class="modal-svc-card">
+          <div class="modal-svc-ico" id="modal-svc-ico"></div>
+          <div style="flex:1;min-width:0">
+            <div class="modal-svc-name" id="modal-svc-name">—</div>
+            <div class="modal-svc-meta" id="modal-svc-meta"></div>
+          </div>
+        </div>
+
+        <!-- Link Input -->
+        <div class="qty-section" style="margin-bottom:14px">
+          <div class="field-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Link / Username
+          </div>
+          <input class="qty-input" type="text" id="f-link" placeholder="Contoh: https://tiktok.com/@username atau @namaakun" style="width:100%"/>
+        </div>
+
+        <!-- Quantity -->
+        <div class="qty-section">
+          <div class="field-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Jumlah
+          </div>
+          <div class="qty-presets" id="qty-presets"></div>
+          <div class="qty-input-wrap">
+            <input class="qty-input" type="number" id="qty-custom" placeholder="Jumlah custom..." min="1" oninput="updateQty(this.value, true)"/>
+            <span class="qty-unit" id="qty-unit-label">unit</span>
+          </div>
+        </div>
+
+        <!-- Price Summary -->
+        <div class="price-summary" style="margin-top:14px">
+          <div>
+            <div class="ps-label">Total Pembayaran</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px" id="qty-display">—</div>
+          </div>
+          <div class="ps-total" id="total-price">Rp 0</div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="pay-section">
+          <div class="field-label" style="margin-bottom:11px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Metode Pembayaran
+          </div>
+          <div class="pay-grid" id="pay-grid"></div>
+        </div>
+
+        <!-- QRIS Display -->
+        <div id="qris-section">
+          <div class="qris-card">
+            <div class="qris-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14.01" y2="14"/><line x1="17" y1="14" x2="17.01" y2="14"/><line x1="20" y1="14" x2="20.01" y2="14"/><line x1="14" y1="17" x2="14.01" y2="17"/><line x1="17" y1="17" x2="17.01" y2="17"/><line x1="20" y1="17" x2="20.01" y2="17"/><line x1="14" y1="20" x2="14.01" y2="20"/><line x1="17" y1="20" x2="17.01" y2="20"/><line x1="20" y1="20" x2="20.01" y2="20"/></svg>
+              Scan QRIS untuk Bayar
+            </div>
+            <div class="qris-box">
+              <!-- QR Code Placeholder SVG -->
+              <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="160" fill="white"/>
+                <!-- Finder patterns -->
+                <rect x="10" y="10" width="50" height="50" rx="4" fill="#0c1f5e"/>
+                <rect x="16" y="16" width="38" height="38" rx="2" fill="white"/>
+                <rect x="22" y="22" width="26" height="26" rx="1" fill="#0c1f5e"/>
+                <rect x="100" y="10" width="50" height="50" rx="4" fill="#0c1f5e"/>
+                <rect x="106" y="16" width="38" height="38" rx="2" fill="white"/>
+                <rect x="112" y="22" width="26" height="26" rx="1" fill="#0c1f5e"/>
+                <rect x="10" y="100" width="50" height="50" rx="4" fill="#0c1f5e"/>
+                <rect x="16" y="106" width="38" height="38" rx="2" fill="white"/>
+                <rect x="22" y="112" width="26" height="26" rx="1" fill="#0c1f5e"/>
+                <!-- Data modules (decorative pattern) -->
+                <rect x="70" y="10" width="10" height="10" fill="#0c1f5e"/>
+                <rect x="84" y="10" width="10" height="10" fill="#0c1f5e"/>
+                <rect x="70" y="24" width="10" height="10" fill="#0c1f5e"/>
+                <rect x="84" y="24" width="6" height="6" fill="#0c1f5e"/>
+                <rect x="70" y="38" width="6" height="6" fill="#0c1f5e"/>
+                <rect x="80" y="38" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="70" y="50" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="84" y="50" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="10" y="70" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="22" y="70" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="32" y="70" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="46" y="70" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="58" y="70" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="70" y="70" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="82" y="70" width="6" height="8" fill="#1a56db"/>
+                <rect x="92" y="70" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="104" y="70" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="114" y="70" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="128" y="70" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="140" y="70" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="10" y="82" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="20" y="82" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="34" y="82" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="46" y="82" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="56" y="82" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="70" y="82" width="8" height="6" fill="#0c1f5e"/>
+                <rect x="82" y="82" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="94" y="82" width="6" height="8" fill="#0c1f5e"/>
+                <rect x="104" y="82" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="118" y="82" width="8" height="8" fill="#0c1f5e"/>
+                <rect x="130" y="82" width="6" height="8" fill="#1a56db"/>
+                <rect x="140" y="82" width="10" height="8" fill="#0c1f5e"/>
+                <rect x="10" y="94" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="24" y="94" width="8" height="6" fill="#0c1f5e"/>
+                <rect x="36" y="94" width="6" height="6" fill="#0c1f5e"/>
+                <rect x="46" y="94" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="60" y="94" width="6" height="6" fill="#0c1f5e"/>
+                <rect x="70" y="94" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="84" y="94" width="6" height="6" fill="#0c1f5e"/>
+                <rect x="94" y="94" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="108" y="94" width="8" height="6" fill="#1a56db"/>
+                <rect x="120" y="94" width="10" height="6" fill="#0c1f5e"/>
+                <rect x="134" y="94" width="8" height="6" fill="#0c1f5e"/>
+                <rect x="146" y="94" width="6" height="6" fill="#0c1f5e"/>
+                <!-- Center logo area -->
+                <rect x="68" y="62" width="24" height="20" rx="4" fill="#1a56db"/>
+                <text x="80" y="76" text-anchor="middle" font-size="9" font-weight="bold" fill="white" font-family="sans-serif">N</text>
+              </svg>
+            </div>
+            <div class="qris-amount" id="qris-amount">Rp 0</div>
+            <div class="qris-label">Scan dengan aplikasi apapun yang mendukung QRIS</div>
+            <div class="qris-note">Dana · GoPay · ShopeePay · OVO · LinkAja · M-Banking</div>
+          </div>
+        </div>
+
+        <!-- E-Wallet Display -->
+        <div id="ewallet-section">
+          <div class="ewallet-card">
+            <div class="ew-row">
+              <div class="ew-lbl">Nama Akun</div>
+              <div class="ew-val" id="ew-name">—</div>
+            </div>
+            <div class="ew-row">
+              <div class="ew-lbl">Nomor</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="ew-val" id="ew-number">—</div>
+                <button class="ew-copy" onclick="copyText()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Salin
+                </button>
+              </div>
+            </div>
+            <div class="ew-row">
+              <div class="ew-lbl">Jumlah Transfer</div>
+              <div class="ew-val" id="ew-amount" style="color:var(--blue-main)">—</div>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--text-muted);line-height:1.7;margin-top:10px;padding:10px 12px;background:rgba(26,86,219,.04);border-radius:10px;border:1px solid var(--border)">
+            ⚠️ Transfer sesuai nominal yang tertera. Nominal berbeda dapat memperlambat proses verifikasi.
+          </div>
+        </div>
+
+        <!-- Confirm Button -->
+        <button class="btn-confirm" id="btn-confirm" onclick="confirmOrder()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Konfirmasi Pembayaran
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: SUCCESS -->
+    <div id="step-success" style="display:none">
+      <div class="modal-header">
+        <div class="modal-title">Status Pesanan</div>
+        <button class="modal-close" onclick="closeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="success-section" style="display:block">
+          <div class="success-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="success-title">Pesanan Dikonfirmasi! 🎉</div>
+          <div class="success-sub">Pembayaran kamu sedang kami verifikasi. Pesanan akan diproses dalam waktu singkat.</div>
+          <div class="success-order" id="success-details"></div>
+          <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px;line-height:1.6">
+            Butuh bantuan? Hubungi CS kami via WhatsApp<br>
+            <strong style="color:var(--blue-main)">+62 812-XXXX-XXXX</strong>
+          </div>
+          <button class="btn-close-success" onclick="closeModal()">Tutup & Kembali</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const PLATFORMS = [
+  {
+    id:'tiktok', name:'TikTok', colorAccent:'#fe2c55', colorBg:'rgba(254,44,85,.1)',
+    desc:'Likes, views, followers TikTok',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.77.28 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-6.13 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.94a8.19 8.19 0 0 0 4.79 1.52V7.01a4.85 4.85 0 0 1-1.03-.32z" fill="#fe2c55"/></svg>`,
+    services:[
+      {id:'tt1',name:'TikTok Likes',desc:'Tambah likes video TikTok dengan cepat dan aman. Meningkatkan engagement dan jangkauan konten kamu.',pricePerUnit:5,unit:'likes',minQty:100,presets:[500,1000,5000,10000],time:'30-60 Menit',quality:'High Quality',popular:true,icon:'heart'},
+      {id:'tt2',name:'TikTok Views',desc:'Tingkatkan views video untuk mendongkrak algoritma FYP TikTok dan memperluas jangkauan organik.',pricePerUnit:2,unit:'views',minQty:1000,presets:[1000,5000,10000,50000],time:'15-30 Menit',quality:'Real Views',popular:false,icon:'eye'},
+      {id:'tt3',name:'TikTok Followers',desc:'Dapatkan followers TikTok yang nyata dan aktif untuk membangun kredibilitas akun kamu.',pricePerUnit:150,unit:'followers',minQty:100,presets:[100,500,1000,5000],time:'2-4 Jam',quality:'Real & Active',popular:true,icon:'users'},
+      {id:'tt4',name:'TikTok Comments',desc:'Tambah komentar aktif yang meningkatkan engagement rate video TikTok kamu secara signifikan.',pricePerUnit:800,unit:'comments',minQty:10,presets:[10,25,50,100],time:'1-3 Jam',quality:'Custom',popular:false,icon:'message'},
+      {id:'tt5',name:'TikTok Shares',desc:'Tingkatkan jumlah share video untuk mempercepat viral content di platform TikTok.',pricePerUnit:200,unit:'shares',minQty:50,presets:[50,100,500,1000],time:'1-2 Jam',quality:'Real Shares',popular:false,icon:'share'},
+    ]
+  },
+  {
+    id:'instagram', name:'Instagram', colorAccent:'#e1306c', colorBg:'rgba(225,48,108,.1)',
+    desc:'Likes, followers, views Instagram',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#e1306c" stroke="none"/></svg>`,
+    services:[
+      {id:'ig1',name:'Instagram Likes',desc:'Tambah likes postingan Instagram secara instan. Meningkatkan kepercayaan dan engagement akun.',pricePerUnit:6,unit:'likes',minQty:100,presets:[500,1000,5000,10000],time:'30 Menit',quality:'High Quality',popular:true,icon:'heart'},
+      {id:'ig2',name:'Instagram Followers',desc:'Dapatkan followers Instagram berkualitas yang aktif dan berinteraksi dengan konten kamu.',pricePerUnit:200,unit:'followers',minQty:100,presets:[100,500,1000,5000],time:'3-6 Jam',quality:'Real & Active',popular:true,icon:'users'},
+      {id:'ig3',name:'Instagram Views',desc:'Tingkatkan views Reels dan Story untuk mendapatkan lebih banyak exposure organik.',pricePerUnit:3,unit:'views',minQty:1000,presets:[1000,5000,20000,100000],time:'1 Jam',quality:'Real Views',popular:false,icon:'eye'},
+      {id:'ig4',name:'Instagram Saves',desc:'Tambah jumlah save postingan — sinyal kuat untuk algoritma Instagram dalam menyebarkan konten.',pricePerUnit:100,unit:'saves',minQty:50,presets:[100,500,1000,5000],time:'1-2 Jam',quality:'Real Saves',popular:false,icon:'bookmark'},
+    ]
+  },
+  {
+    id:'youtube', name:'YouTube', colorAccent:'#ff0000', colorBg:'rgba(255,0,0,.1)',
+    desc:'Views, subscribers, likes YouTube',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" fill="#ff0000"/><polygon points="10,9 10,15 16,12" fill="white"/></svg>`,
+    services:[
+      {id:'yt1',name:'YouTube Views',desc:'Tambah views video YouTube untuk meningkatkan ranking di pencarian dan rekomendasi algoritma.',pricePerUnit:10,unit:'views',minQty:500,presets:[1000,5000,10000,50000],time:'2-4 Jam',quality:'HQ Views',popular:true,icon:'eye'},
+      {id:'yt2',name:'YouTube Subscribers',desc:'Dapatkan subscriber YouTube aktif. Sangat membantu untuk mencapai monetisasi channel.',pricePerUnit:500,unit:'subscribers',minQty:100,presets:[100,500,1000,5000],time:'6-12 Jam',quality:'Real & Active',popular:true,icon:'users'},
+      {id:'yt3',name:'YouTube Likes',desc:'Tingkatkan likes video untuk memperkuat signal positif ke algoritma YouTube.',pricePerUnit:50,unit:'likes',minQty:100,presets:[100,500,1000,5000],time:'1-2 Jam',quality:'High Quality',popular:false,icon:'heart'},
+      {id:'yt4',name:'Watch Hours',desc:'Tambah jam tayang untuk memenuhi syarat 4000 jam yang dibutuhkan monetisasi YouTube.',pricePerUnit:25000,unit:'hours',minQty:100,presets:[100,500,1000,4000],time:'7-14 Hari',quality:'Real Watch',popular:false,icon:'clock'},
+    ]
+  },
+  {
+    id:'facebook', name:'Facebook', colorAccent:'#1877f2', colorBg:'rgba(24,119,242,.1)',
+    desc:'Likes, followers, views Facebook',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#1877f2"/><path d="M16 8h-2a2 2 0 0 0-2 2v2H9v3h3v5h3v-5h2l1-3h-3V10a.5.5 0 0 1 .5-.5H16V8z" fill="white"/></svg>`,
+    services:[
+      {id:'fb1',name:'Facebook Likes',desc:'Tambah likes postingan atau halaman Facebook untuk meningkatkan kepercayaan dan interaksi.',pricePerUnit:8,unit:'likes',minQty:100,presets:[500,1000,5000,10000],time:'1-2 Jam',quality:'High Quality',popular:false,icon:'heart'},
+      {id:'fb2',name:'Facebook Followers',desc:'Dapatkan followers Facebook aktif yang dapat meningkatkan jangkauan dan engagement halaman.',pricePerUnit:250,unit:'followers',minQty:100,presets:[100,500,1000,5000],time:'4-8 Jam',quality:'Real & Active',popular:false,icon:'users'},
+      {id:'fb3',name:'Facebook Views',desc:'Tingkatkan views video dan Reel Facebook untuk memperluas jangkauan konten kamu.',pricePerUnit:4,unit:'views',minQty:1000,presets:[1000,5000,20000,50000],time:'1 Jam',quality:'Real Views',popular:false,icon:'eye'},
+    ]
+  },
+  {
+    id:'twitter', name:'Twitter / X', colorAccent:'#000000', colorBg:'rgba(0,0,0,.08)',
+    desc:'Followers, likes, retweets',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#000"/></svg>`,
+    services:[
+      {id:'tw1',name:'Twitter Followers',desc:'Dapatkan followers Twitter/X yang nyata dan aktif untuk membangun pengaruh di platform.',pricePerUnit:300,unit:'followers',minQty:100,presets:[100,500,1000,5000],time:'3-6 Jam',quality:'Real & Active',popular:false,icon:'users'},
+      {id:'tw2',name:'Twitter Likes',desc:'Tambah likes pada tweet kamu secara instan untuk meningkatkan kredibilitas konten.',pricePerUnit:10,unit:'likes',minQty:100,presets:[500,1000,5000,10000],time:'30 Menit',quality:'High Quality',popular:false,icon:'heart'},
+      {id:'tw3',name:'Twitter Retweets',desc:'Tingkatkan retweet untuk memperluas jangkauan tweet dan mendapatkan lebih banyak eksposur.',pricePerUnit:50,unit:'retweets',minQty:50,presets:[50,100,500,1000],time:'1 Jam',quality:'Real RT',popular:false,icon:'share'},
+    ]
+  },
+  {
+    id:'spotify', name:'Spotify', colorAccent:'#1db954', colorBg:'rgba(29,185,84,.1)',
+    desc:'Plays, followers, listeners Spotify',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#1db954"/><path d="M16.7 10.2c-2.7-1.6-7.1-1.8-9.7-1 a0.7 0.7 0 0 0 .4 1.4c2.2-.7 6.1-.5 8.5.9a0.7 0.7 0 0 0 .7-1.2zM16.4 12.8c-2.3-1.4-5.9-1.8-8.6-.9a0.6 0.6 0 0 0 .4 1.2c2.4-.7 5.6-.4 7.6.8a0.6 0.6 0 0 0 .6-1zM15.8 15.4a.5.5 0 0 0-.7-.2c-2-.1-4.6-.3-6.9.7a.5.5 0 0 0 .4 1c2.1-.9 4.5-.8 6.4-.7a.5.5 0 0 0 .8-.8z" fill="white"/></svg>`,
+    services:[
+      {id:'sp1',name:'Spotify Plays',desc:'Tambah streaming lagu kamu di Spotify untuk meningkatkan popularitas dan royalti musik.',pricePerUnit:5,unit:'plays',minQty:1000,presets:[1000,5000,10000,100000],time:'2-4 Jam',quality:'Real Streams',popular:true,icon:'play'},
+      {id:'sp2',name:'Spotify Followers',desc:'Dapatkan followers akun atau playlist Spotify untuk membangun audiens setia.',pricePerUnit:400,unit:'followers',minQty:50,presets:[100,500,1000,5000],time:'4-8 Jam',quality:'Real & Active',popular:false,icon:'users'},
+      {id:'sp3',name:'Monthly Listeners',desc:'Tingkatkan monthly listeners untuk memperkuat profil artis dan meningkatkan discovery.',pricePerUnit:8,unit:'listeners',minQty:1000,presets:[1000,5000,10000,50000],time:'3-5 Hari',quality:'Real Listeners',popular:false,icon:'chart'},
+    ]
+  },
+  {
+    id:'telegram', name:'Telegram', colorAccent:'#2aabee', colorBg:'rgba(42,171,238,.1)',
+    desc:'Members & views Telegram',
+    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#2aabee"/><path d="M5.5 11.5l10-4-3 10-2.5-3L7.5 16l-.5-3-1.5-1.5zM10.5 14.5l6-5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    services:[
+      {id:'tg1',name:'Telegram Members',desc:'Tambah anggota grup atau channel Telegram nyata untuk membangun komunitas yang aktif.',pricePerUnit:100,unit:'members',minQty:100,presets:[100,500,1000,5000],time:'2-4 Jam',quality:'Real Members',popular:false,icon:'users'},
+      {id:'tg2',name:'Telegram Views',desc:'Tingkatkan views postingan channel Telegram untuk meningkatkan jangkauan pesan kamu.',pricePerUnit:5,unit:'views',minQty:1000,presets:[1000,5000,20000,100000],time:'30 Menit',quality:'Real Views',popular:false,icon:'eye'},
+    ]
+  },
+];
+
+const PAYMENT_METHODS = [
+  {id:'qris',name:'QRIS',type:'Semua Dompet Digital',color:'#0c1f5e',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14.01" y2="14"/><line x1="17" y1="14" x2="17.01" y2="14"/><line x1="20" y1="14" x2="20.01" y2="14"/><line x1="14" y1="17" x2="14.01" y2="17"/><line x1="20" y1="20" x2="20.01" y2="20"/></svg>`,account:'081234567890',holder:'Nawa Official'},
+  {id:'dana',name:'DANA',type:'Dompet Digital',color:'#118ee9',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/></svg>`,account:'081234567890',holder:'Nawa Official'},
+  {id:'gopay',name:'GoPay',type:'Dompet Digital',color:'#00aa5b',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>`,account:'081234567890',holder:'Nawa Official'},
+  {id:'shopeepay',name:'ShopeePay',type:'Dompet Digital',color:'#ee4d2d',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,account:'081234567890',holder:'Nawa Official'},
+  {id:'ovo',name:'OVO',type:'Dompet Digital',color:'#4c3494',icon:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/></svg>`,account:'081234567890',holder:'Nawa Official'},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let activePlatform = null;
+let activeService  = null;
+let qty = 1000;
+let activePayment  = null;
+
+// ══════════════════════════════════════════
+// ICONS
+// ══════════════════════════════════════════
+const ICONS = {
+  heart:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  eye:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  users:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  message:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  share:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`,
+  bookmark:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+  play:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+  clock:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  chart:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+};
+const fmtRp = n => 'Rp ' + Math.round(Number(n)||0).toLocaleString('id-ID');
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init() {
+  renderPlatforms();
+}
+
+function renderPlatforms() {
+  const grid = document.getElementById('platforms-grid');
+  grid.innerHTML = PLATFORMS.map(p => `
+    <div class="platform-card" id="plt-${p.id}" onclick="selectPlatform('${p.id}')"
+      style="--hover-bg:${p.colorBg}">
+      <div class="plt-icon" style="background:${p.colorBg}">${p.icon}</div>
+      <div class="plt-name">${p.name}</div>
+      <div class="plt-count">${p.services.length} layanan</div>
+    </div>
+  `).join('');
+
+  // hover effect
+  document.querySelectorAll('.platform-card').forEach(c => {
+    c.addEventListener('mouseenter', () => {
+      if (!c.classList.contains('active')) c.style.background = c.style.getPropertyValue('--hover-bg') || 'rgba(26,86,219,.05)';
+    });
+    c.addEventListener('mouseleave', () => {
+      if (!c.classList.contains('active')) c.style.background = '';
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+// PLATFORM SELECT
+// ══════════════════════════════════════════
+function selectPlatform(id) {
+  activePlatform = PLATFORMS.find(p => p.id === id);
+  if (!activePlatform) return;
+
+  // Update active state on cards
+  document.querySelectorAll('.platform-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('plt-'+id).classList.add('active');
+
+  // Build header
+  const hdr = document.getElementById('platform-header');
+  hdr.innerHTML = `
+    <div class="ph-icon">${activePlatform.icon}</div>
+    <div class="ph-info">
+      <div class="ph-name">${activePlatform.name}</div>
+      <div class="ph-desc">${activePlatform.services.length} Layanan Tersedia · Proses Cepat &amp; Terjamin</div>
+    </div>
+    <button class="ph-back" onclick="hidePlatform()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Kembali
+    </button>`;
+
+  // Build services
+  renderServices(activePlatform.services, 'services-grid', activePlatform);
+
+  const sec = document.getElementById('section-services');
+  sec.style.display = 'block';
+  sec.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function hidePlatform() {
+  document.getElementById('section-services').style.display = 'none';
+  document.querySelectorAll('.platform-card').forEach(c => {
+    c.classList.remove('active');
+    c.style.background = '';
+  });
+  activePlatform = null;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderServices(services, targetId, platform) {
+  const grid = document.getElementById(targetId);
+  if (!services.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div class="empty-title">Tidak ada layanan ditemukan</div>
+      <div class="empty-sub">Coba kata kunci lain</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = services.map(s => {
+    const plt = platform || PLATFORMS.find(p => p.services.find(sv => sv.id === s.id));
+    const color = plt ? plt.colorAccent : 'var(--blue-main)';
+    const bg    = plt ? plt.colorBg    : 'rgba(26,86,219,.08)';
+    const minPrice = s.pricePerUnit * s.minQty;
+    return `<div class="svc-card" onclick="openModal('${s.id}', '${plt?.id||''}')">
+      ${s.popular ? '<div class="svc-popular">Populer</div>' : ''}
+      <div class="svc-top">
+        <div class="svc-icon" style="background:${bg};color:${color}">${ICONS[s.icon]||ICONS.eye}</div>
+        <div class="svc-info">
+          <div class="svc-name">${s.name}</div>
+          <div class="svc-platform">${plt?.name||''}</div>
+        </div>
+      </div>
+      <div class="svc-desc">${s.desc}</div>
+      <div class="svc-meta">
+        <div class="svc-tag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${s.time}
+        </div>
+        <div class="svc-tag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          ${s.quality}
+        </div>
+        <div class="svc-tag">Min. ${s.minQty.toLocaleString('id-ID')} ${s.unit}</div>
+      </div>
+      <div class="svc-bottom">
+        <div class="svc-price">
+          <div class="svc-from">Mulai dari</div>
+          <div class="svc-price-val">${fmtRp(minPrice)}</div>
+          <div class="svc-unit">${s.minQty.toLocaleString()} ${s.unit}</div>
+        </div>
+        <button class="svc-btn" onclick="event.stopPropagation();openModal('${s.id}','${plt?.id||''}')">
+          Pesan Sekarang
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════
+function doSearch(q) {
+  const query = q.trim().toLowerCase();
+  const searchSec = document.getElementById('section-search');
+  const searchGrid = document.getElementById('search-grid');
+  const svcSec = document.getElementById('section-services');
+
+  if (!query) {
+    searchSec.style.display = 'none';
+    return;
+  }
+
+  const results = [];
+  PLATFORMS.forEach(plt => {
+    plt.services.forEach(s => {
+      if (
+        s.name.toLowerCase().includes(query) ||
+        plt.name.toLowerCase().includes(query) ||
+        s.unit.toLowerCase().includes(query) ||
+        s.desc.toLowerCase().includes(query)
+      ) results.push({...s, _plt: plt});
+    });
+  });
+
+  svcSec.style.display = 'none';
+  searchSec.style.display = 'block';
+  renderServices(results, 'search-grid', null);
+  searchSec.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('section-search').style.display = 'none';
+}
+
+// ══════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════
+function openModal(svcId, pltId) {
+  const plt = PLATFORMS.find(p => p.id === pltId) || PLATFORMS.find(p => p.services.find(s => s.id === svcId));
+  const svc = plt?.services.find(s => s.id === svcId);
+  if (!svc || !plt) return;
+
+  activeService = svc;
+  activePlatform = plt;
+  activePayment = null;
+  qty = svc.presets[1] || svc.minQty;
+
+  // Reset UI
+  document.getElementById('step-order').style.display = 'block';
+  document.getElementById('step-success').style.display = 'none';
+  document.getElementById('qris-section').style.display = 'none';
+  document.getElementById('ewallet-section').style.display = 'none';
+  document.getElementById('f-link').value = '';
+  document.getElementById('btn-confirm').disabled = false;
+  document.getElementById('btn-confirm').innerHTML = `
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    Konfirmasi Pembayaran`;
+
+  // Service icon in modal
+  const moIco = document.getElementById('modal-svc-ico');
+  moIco.innerHTML = ICONS[svc.icon]||ICONS.eye;
+  moIco.style.background = plt.colorBg;
+  moIco.style.color       = plt.colorAccent;
+
+  document.getElementById('modal-svc-name').textContent = svc.name;
+  document.getElementById('modal-svc-meta').innerHTML = `
+    <span>${plt.name}</span>
+    <span class="modal-dot"></span>
+    <span>${svc.time}</span>
+    <span class="modal-dot"></span>
+    <span>${svc.quality}</span>`;
+
+  // Quantity presets
+  buildPresets(svc);
+  updateQty(qty, false);
+
+  // Payment methods
+  buildPaymentGrid();
+
+  // Show modal
+  document.getElementById('modal-backdrop').classList.add('show');
+  document.body.classList.add('modal-open');
+}
+
+function buildPresets(svc) {
+  const wrap = document.getElementById('qty-presets');
+  wrap.innerHTML = svc.presets.map(p => `
+    <button class="qty-preset ${p===qty?'active':''}" onclick="updateQty(${p}, false)">${p.toLocaleString('id-ID')}</button>
+  `).join('');
+  document.getElementById('qty-unit-label').textContent = svc.unit;
+  document.getElementById('qty-custom').value = qty;
+  document.getElementById('qty-custom').min = svc.minQty;
+}
+
+function updateQty(val, isCustom) {
+  qty = Math.max(activeService.minQty, Number(val)||activeService.minQty);
+  if (!isCustom) document.getElementById('qty-custom').value = qty;
+
+  // Update preset buttons
+  document.querySelectorAll('.qty-preset').forEach(b => {
+    b.classList.toggle('active', Number(b.textContent.replace(/\./g,'')) === qty);
+  });
+
+  const total = qty * activeService.pricePerUnit;
+  document.getElementById('total-price').textContent = fmtRp(total);
+  document.getElementById('qty-display').textContent = `${qty.toLocaleString('id-ID')} ${activeService.unit} × ${fmtRp(activeService.pricePerUnit)}`;
+  document.getElementById('qris-amount').textContent = fmtRp(total);
+  if (document.getElementById('ew-amount').textContent !== '—') {
+    document.getElementById('ew-amount').textContent = fmtRp(total);
+  }
+}
+
+function buildPaymentGrid() {
+  const grid = document.getElementById('pay-grid');
+  grid.innerHTML = PAYMENT_METHODS.map(m => `
+    <div class="pay-card" id="pay-${m.id}" onclick="selectPayment('${m.id}')">
+      <div class="pay-radio"></div>
+      <div class="pay-icon" style="background:rgba(0,0,0,.05);color:${m.color}">${m.icon}</div>
+      <div class="pay-info">
+        <div class="pay-name">${m.name}</div>
+        <div class="pay-type">${m.type}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectPayment(id) {
+  activePayment = id;
+  document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('pay-'+id).classList.add('active');
+
+  const method = PAYMENT_METHODS.find(m => m.id === id);
+  const total  = qty * activeService.pricePerUnit;
+
+  if (id === 'qris') {
+    document.getElementById('qris-section').style.display = 'block';
+    document.getElementById('ewallet-section').style.display = 'none';
+    document.getElementById('qris-amount').textContent = fmtRp(total);
+  } else {
+    document.getElementById('qris-section').style.display = 'none';
+    document.getElementById('ewallet-section').style.display = 'block';
+    document.getElementById('ew-name').textContent   = method.holder;
+    document.getElementById('ew-number').textContent = method.account;
+    document.getElementById('ew-amount').textContent = fmtRp(total);
+  }
+
+  // Scroll to confirm
+  setTimeout(() => {
+    document.getElementById('btn-confirm').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
+}
+
+function copyText() {
+  const num = document.getElementById('ew-number').textContent;
+  navigator.clipboard.writeText(num).then(() => toast('Nomor disalin!', 'info')).catch(() => {});
+}
+
+// ══════════════════════════════════════════
+// CONFIRM
+// ══════════════════════════════════════════
+function confirmOrder() {
+  if (!activePayment) { toast('Pilih metode pembayaran dulu!', 'info'); return; }
+  const link = document.getElementById('f-link').value.trim();
+  if (!link) { toast('Masukkan link atau username dulu!', 'info'); return; }
+
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="animation:spin .7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Memproses...`;
+
+  const method = PAYMENT_METHODS.find(m => m.id === activePayment);
+  const total  = qty * activeService.pricePerUnit;
+
+  setTimeout(() => {
+    // Show success
+    document.getElementById('step-order').style.display   = 'none';
+    document.getElementById('step-success').style.display = 'block';
+
+    const orderId = 'NW-' + Date.now().toString().slice(-8);
+    document.getElementById('success-details').innerHTML = `
+      <div class="so-row"><div class="so-lbl">Order ID</div><div class="so-val">${orderId}</div></div>
+      <div class="so-row"><div class="so-lbl">Layanan</div><div class="so-val">${activeService.name}</div></div>
+      <div class="so-row"><div class="so-lbl">Jumlah</div><div class="so-val">${qty.toLocaleString('id-ID')} ${activeService.unit}</div></div>
+      <div class="so-row"><div class="so-lbl">Target</div><div class="so-val" style="overflow:hidden;text-overflow:ellipsis;max-width:180px">${link}</div></div>
+      <div class="so-row"><div class="so-lbl">Pembayaran</div><div class="so-val">${method.name}</div></div>
+      <div class="so-row"><div class="so-lbl">Total</div><div class="so-val" style="color:var(--blue-main)">${fmtRp(total)}</div></div>
+      <div class="so-row"><div class="so-lbl">Estimasi</div><div class="so-val">${activeService.time}</div></div>`;
+
+    toast('Pesanan berhasil dikonfirmasi! 🎉', 'ok');
+  }, 1800);
+}
+
+// ══════════════════════════════════════════
+// MODAL UTILS
+// ══════════════════════════════════════════
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.remove('show');
+  document.body.classList.remove('modal-open');
+  setTimeout(() => {
+    document.getElementById('step-order').style.display   = 'block';
+    document.getElementById('step-success').style.display = 'none';
+    document.getElementById('qris-section').style.display = 'none';
+    document.getElementById('ewallet-section').style.display = 'none';
+  }, 300);
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = '', 3000);
+}
+
+// ══════════════════════════════════════════
+// SCROLL HELPERS
+// ══════════════════════════════════════════
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Keyboard: close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('modal-backdrop').classList.contains('show')) closeModal();
+});
+
+// spin keyframe for loading
+const style = document.createElement('style');
+style.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+document.head.appendChild(style);
+
+// Init
+init();
+</script>
+</body>
+  </html>
